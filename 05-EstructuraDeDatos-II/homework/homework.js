@@ -1,5 +1,7 @@
 'use strict';
 
+const { prototype } = require("@11ty/eleventy");
+
 /* EJERCICIO 1
 Implementar la clase LinkedList, definiendo los siguientes métodos:
   - add: agrega un nuevo nodo al final de la lista;
@@ -10,9 +12,78 @@ Implementar la clase LinkedList, definiendo los siguientes métodos:
   search(isEven), donde isEven es una función que retorna true cuando recibe por parámetro un número par, busca un nodo cuyo valor sea un número par.
   En caso de que la búsqueda no arroje resultados, search debe retornar null.
 */
-function LinkedList() {}
+function LinkedList() {
+  this.head = null
+}
 
-function Node(value) {}
+class Node {
+  constructor(value) {
+    this.value = value,
+    this.next = null;
+  }
+}
+
+LinkedList.prototype.add = function (value){
+var node = new Node(value)
+  if(this.head === null) this.head = node
+  else {
+    var current = this.head
+    while (current.next !== null){
+      current = current.next
+    }
+    current.next = node
+  }
+}
+
+LinkedList.prototype.remove = function (){
+  if (this.head === null) return null
+  if (this.head.next === null) {
+    this.head.next = null
+    return this.head.value
+  } 
+  else {
+    var current = this.head
+    while (current.next.next !== null){
+      current = current.next
+    }
+    let valor = current.next.value
+    current.next = null
+    return valor
+  }
+}
+
+LinkedList.prototype.search = function (arg){
+let current = this.head
+  if (!current) return null
+  if (arg === 'function'){
+    if (arg(current.value)) return true
+    else return false
+  }
+  else {
+    if (this.head.value === arg) return true
+    let current = this.head.next
+    while(!current.next){
+      if (current.value === arg) return true
+      current = current.next
+    }
+    return false
+  }
+
+
+}
+
+var list = new LinkedList
+
+list.add(5)
+list.add(10)
+list.add(15)
+list.add(20)
+
+console.log(list.remove())
+
+
+
+
 
 /* EJERCICIO 2
 Implementar la clase HashTable.
