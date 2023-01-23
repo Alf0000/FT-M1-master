@@ -38,8 +38,9 @@ var node = new Node(value)
 LinkedList.prototype.remove = function (){
   if (this.head === null) return null
   if (this.head.next === null) {
-    this.head.next = null
-    return this.head.value
+    let valor = this.head.value
+    this.head = null
+    return valor
   } 
   else {
     var current = this.head
@@ -55,34 +56,22 @@ LinkedList.prototype.remove = function (){
 LinkedList.prototype.search = function (arg){
 let current = this.head
   if (!current) return null
-  if (arg === 'function'){
-    if (arg(current.value)) return true
-    else return false
-  }
-  else {
-    if (this.head.value === arg) return true
-    let current = this.head.next
-    while(!current.next){
-      if (current.value === arg) return true
+  if (typeof arg === "function"){
+    while (current){
+      if (arg(current.value)) return current.value
       current = current.next
     }
-    return false
   }
-
-
+  else {
+    while(current){
+      if (current.value === arg) return arg
+      current = current.next
+    }
+  }
+  return null
 }
 
 var list = new LinkedList
-
-list.add(5)
-list.add(10)
-list.add(15)
-list.add(20)
-
-console.log(list.remove())
-
-
-
 
 
 /* EJERCICIO 2
@@ -98,7 +87,40 @@ La clase debe tener los siguientes métodos:
 
 Ejemplo: supongamos que quiero guardar {instructora: 'Ani'} en la tabla. Primero puedo chequear, con hasKey, si ya hay algo en la tabla con el nombre 'instructora'; luego, invocando set('instructora', 'Ani'), se almacenará el par clave-valor en un bucket específico (determinado al hashear la clave)
 */
-function HashTable() {}
+function HashTable() {
+  this.buckets = []
+  this.numBuckets = 35
+}
+
+HashTable.prototype.hash = function(key){
+let suma = 0
+  for (let i=0; i < key.length; i++) {
+    suma = suma + key.charCodeAt(i)
+  }
+  return suma % this.numBuckets
+}
+
+HashTable.prototype.set = function(key, value){
+  if (typeof key !== 'string') throw TypeError ('Key must be strings')
+  var slot = this.hash(key)
+  if(!this.buckets[slot]) this.buckets[slot] = {}
+  this.buckets[slot][key] = value
+}
+
+HashTable.prototype.get = function(key){
+  var slot= this.hash(key)
+  return this.buckets[slot][key]
+}
+
+HashTable.prototype.hasKey = function(key) {
+  var slot = this.hash(key)
+  return this.buckets[slot].hasOwnProperty(key)
+}
+
+/* HashTable.hash('Alfredo')
+HashTable.hash('moto')
+HashTable.hash('tomo') */
+
 
 // No modifiquen nada debajo de esta linea
 // --------------------------------
